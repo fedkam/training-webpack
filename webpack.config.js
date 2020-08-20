@@ -10,12 +10,12 @@ module.exports = {
         analytics: './analitics.js'
     },
     output: { //имена файлов и путь к сборке
-        filename: '[name].[contentHash].bundle.js',
+        filename: '[name].[contentHash].bundle.js', //contentHash для уникальности(связанно с не обновлением кэша)
         path: path.resolve(__dirname, 'dist')
     },
     plugins: [
-        new HTMLWebpackPlugin({ template: './index.html' }),
-        new CleanWebpackPlugin()
+        new HTMLWebpackPlugin({ template: './index.html' }), //добавление к сборке html с подкл(с [name].[contentHash]) javascript
+        new CleanWebpackPlugin() //очистка папки сборки от неактульных файлов
     ],
     module:{
         rules: [
