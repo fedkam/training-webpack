@@ -4,7 +4,8 @@
   "description": "webpackCourse",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Err: no test\" && exit 1"
+    "dev": "yarn webpack --mode development",
+    "build": "yarn webpack --mode production"
   },
   "keywords": [
     "js",
@@ -14,6 +15,7 @@
   "author": "fed <f@mail.ru>",
   "license": "MIT",
   "devDependencies": {
+    "clean-webpack-plugin": "^3.0.0",
     "html-webpack-plugin": "^4.3.0",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12"
