@@ -1,0 +1,21 @@
+{
+  "name": "training-webpack",
+  "version": "1.0.0",
+  "description": "webpackCourse",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Err: no test\" && exit 1"
+  },
+  "keywords": [
+    "js",
+    "webpack",
+    "fedoskamcha"
+  ],
+  "author": "fed <f@mail.ru>",
+  "license": "MIT",
+  "devDependencies": {
+    "html-webpack-plugin": "^4.3.0",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  }
+}
