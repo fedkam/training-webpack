@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "yarn webpack --mode development",
     "build": "yarn webpack --mode production",
-    "watch": "yarn webpack --mode development --watch"
+    "watch": "yarn webpack --mode development --watch",
+    "start": "yarn webpack-dev-server --mode development --open"
   },
   "keywords": [
     "js",
@@ -24,6 +25,7 @@
     "style-loader": "^1.2.1",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0",
     "xml-loader": "^1.2.1"
   },
   "dependencies": {

@@ -6,7 +6,7 @@ module.exports = {
     context: path.resolve(__dirname, 'src'), //где лежат иходники
     mode: 'development', //тип сбора
     entry: { //файлы (чанки)
-        main: './index.js', 
+        main: './index.js',
         analytics: './analitics.js'
     },
     output: { //имена файлов и путь к сборке
@@ -14,17 +14,25 @@ module.exports = {
         path: path.resolve(__dirname, 'dist')
     },
     resolve: {
-        extensions: ['.js', '.json','.png'], //позволяет при import не писать '.js', '.json','.png' и др.
+        extensions: ['.js', '.json', '.png'], //позволяет при import не писать '.js', '.json','.png' и др.
         alias: { //оптимизация описания путей
-            '@models': path.resolve(__dirname, 'src/models'), 
+            '@models': path.resolve(__dirname, 'src/models'),
             '@': path.resolve(__dirname, 'src'),
         }
+    },
+    optimization: {
+        splitChunks: { //оптимизация, если подключается в разные чанки один и тот же плагин. В финальной сборке это выносится в общий фал vendors~nameFile1~nameFil2.... 
+            chunks: 'all'
+        }
+    },
+    devServer: { //горячая перезагрузка при изменние благодаря webpack-dev-server. Запуск yarn start.
+        port: 4200
     },
     plugins: [
         new HTMLWebpackPlugin({ template: './index.html' }), //добавление к сборке html с подкл(с [name].[contentHash]) javascript
         new CleanWebpackPlugin() //очистка папки сборки от неактульных файлов
     ],
-    module:{ //лоадеры (доп.конф)
+    module: { //лоадеры (доп.конф)
         rules: [
             { //для загрузки css
                 test: /\.css$/,
