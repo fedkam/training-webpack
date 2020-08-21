@@ -15,7 +15,10 @@ module.exports = {
     },
     resolve: {
         extensions: ['.js', '.json','.png'], //позволяет при import не писать '.js', '.json','.png' и др.
-        
+        alias: { //оптимизация описания путей
+            '@models': path.resolve(__dirname, 'src/models'), 
+            '@': path.resolve(__dirname, 'src'),
+        }
     },
     plugins: [
         new HTMLWebpackPlugin({ template: './index.html' }), //добавление к сборке html с подкл(с [name].[contentHash]) javascript
