@@ -2,7 +2,7 @@
   "name": "training-webpack",
   "version": "1.0.0",
   "description": "webpackCourse",
-  "main": "index.js",
+  "private": true,
   "scripts": {
     "dev": "yarn webpack --mode development",
     "build": "yarn webpack --mode production",
@@ -18,10 +18,15 @@
   "devDependencies": {
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^4.2.1",
+    "csv-loader": "^3.0.3",
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.3.0",
     "style-loader": "^1.2.1",
     "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^3.3.12",
+    "xml-loader": "^1.2.1"
+  },
+  "dependencies": {
+    "normalize.css": "^8.0.1"
   }
 }

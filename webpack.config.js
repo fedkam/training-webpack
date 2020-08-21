@@ -13,6 +13,10 @@ module.exports = {
         filename: '[name].[contentHash].bundle.js', //contentHash для уникальности(связанно с не обновлением кэша)
         path: path.resolve(__dirname, 'dist')
     },
+    resolve: {
+        extensions: ['.js', '.json','.png'], //позволяет при import не писать '.js', '.json','.png' и др.
+        
+    },
     plugins: [
         new HTMLWebpackPlugin({ template: './index.html' }), //добавление к сборке html с подкл(с [name].[contentHash]) javascript
         new CleanWebpackPlugin() //очистка папки сборки от неактульных файлов
@@ -30,6 +34,14 @@ module.exports = {
             { //для шрифтов
                 test: /\.(ttf|woff|woff2|eot)$/,
                 use: ['file-loader']
+            },
+            { //ну ты понял...
+                test: /\.xml$/,
+                use: ['xml-loader']
+            },
+            { //ну ты понял...
+                test: /\.csv$/,
+                use: ['csv-loader']
             }
         ]
     }
