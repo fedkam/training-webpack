@@ -1,6 +1,13 @@
 const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+const isDev = process.env.NODE_ENV === 'development'; // определение режима сборки
+const isProd = !isDev;
+
+console.log('Режим запуска:', isDev)
 
 module.exports = {
     context: path.resolve(__dirname, 'src'), //где лежат иходники
@@ -26,17 +33,43 @@ module.exports = {
         }
     },
     devServer: { //горячая перезагрузка при изменние благодаря webpack-dev-server. Запуск yarn start.
-        port: 4200
+        port: 4200,
+        hot: isDev
     },
     plugins: [
-        new HTMLWebpackPlugin({ template: './index.html' }), //добавление к сборке html с подкл(с [name].[contentHash]) javascript
-        new CleanWebpackPlugin() //очистка папки сборки от неактульных файлов
+        new HTMLWebpackPlugin({
+            template: './index.html',
+            minify: {//минификация html
+                collapseWhitespace: isProd
+            }
+        }), //добавление к сборке html с подкл(с [name].[contentHash]) javascript
+        new CleanWebpackPlugin(), //очистка папки сборки от неактульных файлов
+        new CopyWebpackPlugin({ //копирование определенного файла в папку сборки
+            patterns: [
+                {
+                    from: path.resolve(__dirname, 'src/favicon.ico'),
+                    to: path.resolve(__dirname, 'dist')
+                }
+            ]
+        }),
+        new MiniCssExtractPlugin({ //
+            filename: '[name].[contentHash].bundle.сss'
+        })
     ],
     module: { //лоадеры (доп.конф)
         rules: [
             { //для загрузки css
                 test: /\.css$/,
-                use: ['style-loader', 'css-loader'] //1)добавление в head для html, 2)обработка import style в js файлах
+                use: [ //1)добавление в head для html, 2)обработка import style в js файлах
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            hmr: isDev,
+                            reloadAll: true
+                        },
+                    },
+                    'css-loader'
+                ]
             },
             { //для изображений
                 test: /\.(png|jpg|svg|gif)$/,

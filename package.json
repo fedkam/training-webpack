@@ -4,10 +4,10 @@
   "description": "webpackCourse",
   "private": true,
   "scripts": {
-    "dev": "yarn webpack --mode development",
-    "build": "yarn webpack --mode production",
-    "watch": "yarn webpack --mode development --watch",
-    "start": "yarn webpack-dev-server --mode development --open"
+    "dev": "cross-env NODE_ENV=development   yarn webpack --mode development",
+    "build": "cross-env NODE_ENV=production   yarn webpack --mode production",
+    "watch": "cross-env NODE_ENV=development   yarn webpack --mode development --watch",
+    "start": "cross-env NODE_ENV=development   yarn webpack-dev-server --mode development --open"
   },
   "keywords": [
     "js",
@@ -18,10 +18,13 @@
   "license": "MIT",
   "devDependencies": {
     "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^6.0.3",
+    "cross-env": "^7.0.2",
     "css-loader": "^4.2.1",
     "csv-loader": "^3.0.3",
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.3.0",
+    "mini-css-extract-plugin": "^0.10.0",
     "style-loader": "^1.2.1",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
