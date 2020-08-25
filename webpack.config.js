@@ -3,11 +3,42 @@ const HTMLWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
+const TerserWebpackPlugin = require('terser-webpack-plugin');
 
 const isDev = process.env.NODE_ENV === 'development'; // определение режима сборки
 const isProd = !isDev;
 
-console.log('Режим запуска:', isDev)
+
+
+const optimization = () => {
+    const config = {
+        splitChunks: { //оптимизация, если подключается в разные чанки один и тот же плагин. В финальной сборке это выносится в общий фал vendors~nameFile1~nameFil2.... 
+            chunks: 'all'
+        }
+    }
+
+    if (isProd) {
+        console.log('Минификация css js:', isProd)
+        //если прод то минифицируем css - OptimizeCssAssetsWebpackPlugin, js - TerserWebpackPlugin
+        config.minimizer = [
+            new OptimizeCssAssetsWebpackPlugin(),
+            new TerserWebpackPlugin()
+        ]
+    }
+
+    return config;
+}
+
+
+const filename = ext => (
+    //если разработка то не выводить хэши в именах файлов в папке сборки
+    isDev ?
+        `[name].${ext}` :
+        `[name].[hash].${ext}`
+)
+
+
 
 module.exports = {
     context: path.resolve(__dirname, 'src'), //где лежат иходники
@@ -17,7 +48,7 @@ module.exports = {
         analytics: './analitics.js'
     },
     output: { //имена файлов и путь к сборке
-        filename: '[name].[contentHash].bundle.js', //contentHash для уникальности(связанно с не обновлением кэша)
+        filename: filename('js'), //hash для уникальности(связанно с не обновлением кэша)
         path: path.resolve(__dirname, 'dist')
     },
     resolve: {
@@ -27,11 +58,7 @@ module.exports = {
             '@': path.resolve(__dirname, 'src'),
         }
     },
-    optimization: {
-        splitChunks: { //оптимизация, если подключается в разные чанки один и тот же плагин. В финальной сборке это выносится в общий фал vendors~nameFile1~nameFil2.... 
-            chunks: 'all'
-        }
-    },
+    optimization: optimization(), //вынес в функцию
     devServer: { //горячая перезагрузка при изменние благодаря webpack-dev-server. Запуск yarn start.
         port: 4200,
         hot: isDev
@@ -42,7 +69,7 @@ module.exports = {
             minify: {//минификация html
                 collapseWhitespace: isProd
             }
-        }), //добавление к сборке html с подкл(с [name].[contentHash]) javascript
+        }), //добавление к сборке html с подкл(с [name].[hash]) javascript
         new CleanWebpackPlugin(), //очистка папки сборки от неактульных файлов
         new CopyWebpackPlugin({ //копирование определенного файла в папку сборки
             patterns: [
@@ -52,8 +79,8 @@ module.exports = {
                 }
             ]
         }),
-        new MiniCssExtractPlugin({ //
-            filename: '[name].[contentHash].bundle.сss'
+        new MiniCssExtractPlugin({ 
+            filename: filename('css')
         })
     ],
     module: { //лоадеры (доп.конф)
@@ -69,6 +96,34 @@ module.exports = {
                         },
                     },
                     'css-loader'
+                ]
+            },
+            { //для загрузки less
+                test: /\.less$/,
+                use: [ //1)добавление в head для html, 2-3)обработка import style в js файлах
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            hmr: isDev,
+                            reloadAll: true
+                        },
+                    },
+                    'css-loader',
+                    'less-loader'
+                ]
+            },
+            { //для загрузки sass
+                test: /\.s[ac]ss$/, //[ac] либо A либо C
+                use: [ //1)добавление в head для html, 2-3)обработка import style в js файлах
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            hmr: isDev,
+                            reloadAll: true
+                        },
+                    },
+                    'css-loader',
+                    'sass-loader'
                 ]
             },
             { //для изображений
