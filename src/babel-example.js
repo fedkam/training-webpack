@@ -8,7 +8,7 @@ start().then(console.log)
 
 
 
-//
+// @babel/plugin-proposal-class-properties
 class Until {
     static id = Date.now()
 }

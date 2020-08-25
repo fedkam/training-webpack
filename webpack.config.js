@@ -61,12 +61,28 @@ const cssLoaders = extra => {
 
 
 
+const babelOptions = (preset) => {
+    const options = {
+        presets: [
+            '@babel/preset-env'
+        ],
+        plugins: [
+            '@babel/plugin-proposal-class-properties'
+        ]
+    }
+
+    if (preset) options.presets.push(preset);
+
+    return options;
+}
+
+
 module.exports = {
     context: path.resolve(__dirname, 'src'), //где лежат иходники
     mode: 'development', //тип сбора
     entry: { // доп.настройка для babel(для async() etc.) + файлы (чанки)  
-        main: ['@babel/polyfill','./index.js', ],
-        analytics: './analitics.js'
+        main: ['@babel/polyfill', './index.jsx',],
+        analytics: './analitics.ts'
     },
     output: { //имена файлов и путь к сборке
         filename: filename('js'), //hash для уникальности(связанно с не обновлением кэша)
@@ -135,19 +151,30 @@ module.exports = {
                 use: ['csv-loader']
             },
             {
-                //транспилятор в package.json ностройка для babel browserslist:...
+                //транспилятор для js. В package.json нaстройка для babel browserslist:...
                 test: /\.js$/,
                 exclude: /node_modules/,
                 loader: {
                     loader: 'babel-loader',
-                    options: {
-                        presets: [
-                            '@babel/preset-env'
-                        ],
-                        plugins:[
-                            '@babel/plugin-proposal-class-properties'
-                        ]
-                    }
+                    options: babelOptions()
+                }
+            },
+            {
+                //транспилятор для TS. В package.json ностройка для babel browserslist:...
+                test: /\.ts$/,
+                exclude: /node_modules/,
+                loader: {
+                    loader: 'babel-loader',
+                    options: babelOptions('@babel/preset-typescript')
+                }
+            },
+            {
+                //транспилятор для ReactJS. В package.json ностройка для babel browserslist:...
+                test: /\.jsx$/,
+                exclude: /node_modules/,
+                loader: {
+                    loader: 'babel-loader',
+                    options: babelOptions('@babel/preset-react')
                 }
             }
         ]
