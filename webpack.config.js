@@ -31,6 +31,7 @@ const optimization = () => {
 }
 
 
+
 const filename = ext => (
     //если разработка то не выводить хэши в именах файлов в папке сборки
     isDev ?
@@ -103,35 +104,41 @@ module.exports = {
             filename: filename('css')
         })
     ],
-    module: { //лоадеры (доп.конф)
+    module: {   //лоадеры (доп.конф)
         rules: [
-            { //для загрузки css
+            {   //для загрузки css
                 test: /\.css$/,
                 use: cssLoaders() //custom func с настройками для css/и др.
             },
-            { //для загрузки less
+            {   //для загрузки less
                 test: /\.less$/,
                 use: cssLoaders('less-loader')
             },
-            { //для загрузки sass
+            {   //для загрузки sass
                 test: /\.s[ac]ss$/, //[ac] либо A либо C
                 use: cssLoaders('sass-loader')
             },
-            { //для изображений
+            {   //для изображений
                 test: /\.(png|jpg|svg|gif)$/,
                 use: ['file-loader']
             },
-            { //для шрифтов
+            {   //для шрифтов
                 test: /\.(ttf|woff|woff2|eot)$/,
                 use: ['file-loader']
             },
-            { //ну ты понял...
+            {    //ну ты понял...
                 test: /\.xml$/,
                 use: ['xml-loader']
             },
-            { //ну ты понял...
+            {   //ну ты понял...
                 test: /\.csv$/,
                 use: ['csv-loader']
+            },
+            {
+                //транспилятор
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loader: "babel-loader"
             }
         ]
     }
