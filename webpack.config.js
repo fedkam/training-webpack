@@ -40,6 +40,26 @@ const filename = ext => (
 
 
 
+const cssLoaders = extra => {
+    //[0]-добавление в head для html, [1]-обработка import style в js файлах [2]-
+    const loaders = [
+        {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+                hmr: isDev,
+                reloadAll: true
+            },
+        },
+        'css-loader'
+    ]
+
+    if (extra) loaders.push(extra);
+
+    return loaders;
+}
+
+
+
 module.exports = {
     context: path.resolve(__dirname, 'src'), //где лежат иходники
     mode: 'development', //тип сбора
@@ -79,7 +99,7 @@ module.exports = {
                 }
             ]
         }),
-        new MiniCssExtractPlugin({ 
+        new MiniCssExtractPlugin({
             filename: filename('css')
         })
     ],
@@ -87,44 +107,15 @@ module.exports = {
         rules: [
             { //для загрузки css
                 test: /\.css$/,
-                use: [ //1)добавление в head для html, 2)обработка import style в js файлах
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            hmr: isDev,
-                            reloadAll: true
-                        },
-                    },
-                    'css-loader'
-                ]
+                use: cssLoaders() //custom func с настройками для css/и др.
             },
             { //для загрузки less
                 test: /\.less$/,
-                use: [ //1)добавление в head для html, 2-3)обработка import style в js файлах
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            hmr: isDev,
-                            reloadAll: true
-                        },
-                    },
-                    'css-loader',
-                    'less-loader'
-                ]
+                use: cssLoaders('less-loader')
             },
             { //для загрузки sass
                 test: /\.s[ac]ss$/, //[ac] либо A либо C
-                use: [ //1)добавление в head для html, 2-3)обработка import style в js файлах
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            hmr: isDev,
-                            reloadAll: true
-                        },
-                    },
-                    'css-loader',
-                    'sass-loader'
-                ]
+                use: cssLoaders('sass-loader')
             },
             { //для изображений
                 test: /\.(png|jpg|svg|gif)$/,
