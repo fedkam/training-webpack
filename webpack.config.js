@@ -42,7 +42,7 @@ const filename = ext => (
 
 
 const cssLoaders = extra => {
-    //[0]-добавление в head для html, [1]-обработка import style в js файлах [2]-
+    //[0]-добавление в head для html, [1]-обработка import style в js файлах [2]-препроц для css
     const loaders = [
         {
             loader: MiniCssExtractPlugin.loader,
@@ -64,8 +64,8 @@ const cssLoaders = extra => {
 module.exports = {
     context: path.resolve(__dirname, 'src'), //где лежат иходники
     mode: 'development', //тип сбора
-    entry: { //файлы (чанки)
-        main: './index.js',
+    entry: { // доп.настройка для babel(для async() etc.) + файлы (чанки)  
+        main: ['@babel/polyfill','./index.js', ],
         analytics: './analitics.js'
     },
     output: { //имена файлов и путь к сборке
@@ -135,10 +135,20 @@ module.exports = {
                 use: ['csv-loader']
             },
             {
-                //транспилятор
+                //транспилятор в package.json ностройка для babel browserslist:...
                 test: /\.js$/,
                 exclude: /node_modules/,
-                loader: "babel-loader"
+                loader: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: [
+                            '@babel/preset-env'
+                        ],
+                        plugins:[
+                            '@babel/plugin-proposal-class-properties'
+                        ]
+                    }
+                }
             }
         ]
     }
