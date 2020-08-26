@@ -14,6 +14,8 @@ import { render } from 'react-dom';
 const post = new Post('Webpack post title', Webpacklogo);
 $('pre').html(post.toString()); //вставка в тег <pre> значение
 
+
+
 // console.log('post to string:', post.toString());
 // console.log('json:', json);
 // console.log('Xml:', xml);

@@ -1,0 +1,13 @@
+{ //настройки elint
+    "parser": "babel-eslint",
+    "rules": {
+        "no-unused-vars": "warn" //если переменная не используется кинь ошибку
+    },
+    "env": {
+        "es6": true, //избавляет от ошибок: 'console'&'Promise' is not defined  no-undef ...
+        "browser": true
+    },
+    "extends": [ //рекомендуемая базовая настройка
+        "eslint:recommended"
+    ]
+}

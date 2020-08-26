@@ -61,6 +61,18 @@ const cssLoaders = extra => {
 
 
 
+const jsLoaders = () => {
+    const loaders = [{
+        loader: 'babel-loader',
+        options: babelOptions()
+    }];
+
+    if(isDev) loaders.push('eslint-loader');
+
+    return loaders;
+}
+
+
 const babelOptions = (preset) => {
     const options = {
         presets: [
@@ -96,6 +108,7 @@ module.exports = {
         }
     },
     optimization: optimization(), //вынес в функцию
+    devtool: isDev ? 'source-map' : '',
     devServer: { //горячая перезагрузка при изменние благодаря webpack-dev-server. Запуск yarn start.
         port: 4200,
         hot: isDev
@@ -154,10 +167,7 @@ module.exports = {
                 //транспилятор для js. В package.json нaстройка для babel browserslist:...
                 test: /\.js$/,
                 exclude: /node_modules/,
-                loader: {
-                    loader: 'babel-loader',
-                    options: babelOptions()
-                }
+                use: jsLoaders()
             },
             {
                 //транспилятор для TS. В package.json ностройка для babel browserslist:...

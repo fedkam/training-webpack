@@ -13,3 +13,7 @@ class Until {
     static id = Date.now()
 }
 console.log('Until:', Until.id)
+
+
+
+let unusedVariable = 'eslint example';
