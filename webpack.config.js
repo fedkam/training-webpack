@@ -5,6 +5,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
+const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
 
 const isDev = process.env.NODE_ENV === 'development'; // определение режима сборки
 const isProd = !isDev;
@@ -89,6 +90,36 @@ const babelOptions = (preset) => {
 }
 
 
+
+const plugins = () => {
+    const projectPlugins = [
+        new HTMLWebpackPlugin({
+            template: './index.html',
+            minify: {//минификация html
+                collapseWhitespace: isProd
+            }
+        }), //добавление к сборке html с подкл(с [name].[hash]) javascript
+        new CleanWebpackPlugin(), //очистка папки сборки от неактульных файлов
+        new CopyWebpackPlugin({ //копирование определенного файла в папку сборки
+            patterns: [
+                {
+                    from: path.resolve(__dirname, 'src/favicon.ico'),
+                    to: path.resolve(__dirname, 'dist')
+                }
+            ]
+        }),
+        new MiniCssExtractPlugin({
+            filename: filename('css')
+        })
+    ];
+
+    if(isProd) projectPlugins.push(new BundleAnalyzerPlugin) //анализ оптимизации финального бандла
+
+    return projectPlugins;
+}
+
+
+
 module.exports = {
     context: path.resolve(__dirname, 'src'), //где лежат иходники
     mode: 'development', //тип сбора
@@ -113,26 +144,7 @@ module.exports = {
         port: 4200,
         hot: isDev
     },
-    plugins: [
-        new HTMLWebpackPlugin({
-            template: './index.html',
-            minify: {//минификация html
-                collapseWhitespace: isProd
-            }
-        }), //добавление к сборке html с подкл(с [name].[hash]) javascript
-        new CleanWebpackPlugin(), //очистка папки сборки от неактульных файлов
-        new CopyWebpackPlugin({ //копирование определенного файла в папку сборки
-            patterns: [
-                {
-                    from: path.resolve(__dirname, 'src/favicon.ico'),
-                    to: path.resolve(__dirname, 'dist')
-                }
-            ]
-        }),
-        new MiniCssExtractPlugin({
-            filename: filename('css')
-        })
-    ],
+    plugins: plugins(),
     module: {   //лоадеры (доп.конф)
         rules: [
             {   //для загрузки css

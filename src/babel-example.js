@@ -15,5 +15,5 @@ class Until {
 console.log('Until:', Until.id)
 
 
-
-let unusedVariable = 'eslint example';
+// Example working eslint 
+//let unusedVariable = 'eslint example';
